@@ -1,240 +1,360 @@
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Nexus</title>
+    <title>secretscenter</title>
     <style>
-        /* --- FONT IMPORT --- */
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300&display=swap');
-
-        /* --- ROOT VARIABLES --- */
+        /* 1. Color Palette & 6. Typography */
         :root {
-            --royal-black: #0A0A0A;
-            --dark-metallic-gold: #CBA135;
-            --charcoal-grey: #1C1C1C;
-            --neutral-ritual-grey: #3A3A3A;
             --parchment-beige: #D8C7A3;
+            --parchment-beige-light: #e2d5b7; /* Lighter shade for gradients */
+            --dark-metallic-gold: #CBA135;
+            --dark-metallic-gold-light: #d6b55a; /* Lighter shade for gradients */
+            --charcoal-grey: #1C1C1C;
             --bloodbound-maroon: #6F1D1B;
-            --font-primary-sacred: 'Cinzel', serif;
-            --font-secondary-body: 'Lato', sans-serif;
-            --transition-ceremonial: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
-            --transition-weighty: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* --- BASE & ENVIRONMENT --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
-        html, body { height: 100%; width: 100%; overflow: hidden; background-color: var(--royal-black); }
-        body { font-family: var(--font-secondary-body); color: var(--parchment-beige); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; position: relative; }
-        
-        #ether-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0; transition: opacity 3s ease-in-out; }
-        #ether-canvas.is-active { opacity: 0.6; }
-        
-        /* [V8 EVOLUTION] Heartbeat of the Void */
-        .heartbeat {
-            position: fixed; top: 50%; left: 50%; width: 1px; height: 1px; z-index: 1;
-            background: transparent;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            box-shadow: 0 0 150px 75px rgba(203, 161, 53, 0.04);
-            animation: pulseHeartbeat 8s infinite alternate ease-in-out;
-        }
-        @keyframes pulseHeartbeat {
-            from { transform: scale(0.8); opacity: 0.5; }
-            to { transform: scale(1.2); opacity: 1; }
+        body {
+            /* MODIFIED: Added a subtle radial gradient to the background */
+            background: radial-gradient(ellipse at top, var(--parchment-beige-light), var(--parchment-beige));
+            color: var(--charcoal-grey);
+            font-family: "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        .cursor { position: fixed; z-index: 9999; pointer-events: none; border-radius: 50%; }
-        .cursor-dot { width: 8px; height: 8px; background-color: var(--dark-metallic-gold); transition: transform 0.2s ease-out; }
-        .cursor-ring { width: 35px; height: 35px; border: 1px solid var(--dark-metallic-gold); opacity: 0.5; transition: transform 0.1s ease-out, opacity 0.3s ease; }
-        body.link-hover .cursor-dot { transform: scale(0.5); }
-        body.link-hover .cursor-ring { transform: scale(1.5); opacity: 1; }
-
-        /* --- PAGE & STAGE MANAGEMENT --- */
-        .page-stage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding: 5%; z-index: 10; opacity: 0; visibility: hidden; transition: var(--transition-ceremonial); }
-        .page-stage.is-active { opacity: 1; visibility: visible; }
-        .content-wrapper { display: flex; justify-content: center; align-items: center; max-width: 900px; width: 100%; text-align: center; position: relative; }
-        
-        /* [FIX] Using local logo.png */
-        .sigil-watermark {
-            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; z-index: 5;
-            background-image: url("logo.png");
-            background-size: contain; opacity: 0.1; transition: opacity 1.5s ease-in-out; pointer-events: none;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        /* --- STAGE 0: UNVEIL --- */
-        #unveil { z-index: 100; }
-        #unveil-text { font-family: var(--font-primary-sacred); color: var(--neutral-ritual-grey); letter-spacing: 0.2em; animation: pulseText 4s infinite ease-in-out; }
-        @keyframes pulseText { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        /* 2. Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            /* MODIFIED: Changed solid border to a gradient border */
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(to right, transparent 10%, var(--dark-metallic-gold), transparent 90%) 1;
+        }
 
-        /* --- ACT I: THE GATE (Homepage) --- */
-        #gate .logo-container { opacity: 0; animation: fadeIn 3s 1s ease-out forwards; }
-        #gate .logo-icon { width: 200px; height: 150px; margin: 0 auto; background-image: url("logo.png"); background-size: contain; transition: var(--transition-weighty); animation: rotateSymbol 30s linear infinite; filter: drop-shadow(0 0 7px var(--dark-metallic-gold)); }
-        #gate .logo-icon:hover { filter: drop-shadow(0 0 20px var(--dark-metallic-gold)); transform: scale(1.05); }
-        #gate .logo-name { font-family: var(--font-primary-sacred); font-weight: 400; font-size: 1.25rem; letter-spacing: 0.5em; text-transform: lowercase; color: var(--neutral-ritual-grey); margin-top: 25px; margin-right: -0.5em; }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-        /* --- ACT II & III SHARED STYLES --- */
-        .obsidian-panel { background-color: rgba(10,10,10,0.6); padding: 50px 70px; border: 1px solid var(--charcoal-grey); position: relative; backdrop-filter: blur(5px); flex-shrink: 0; transition: opacity 0.8s ease-out, transform 0.8s ease-out; background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"%3E%3Cfilter id="f"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".005" numOctaves="4"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23f)"/%3E%3C/svg%3E'); background-size: cover; background-repeat: no-repeat; background-blend-mode: overlay; }
-        /* [V8 EVOLUTION] Shattering of the Veil */
-        .obsidian-panel.is-dissolving { opacity: 0 !important; transform: scale(1.1) rotate(-3deg); filter: blur(10px); }
-        .corner-element::before, .corner-element::after, .bottom-corners::before, .bottom-corners::after { content: ''; position: absolute; width: 50px; height: 50px; border-color: var(--dark-metallic-gold); border-style: solid; }
-        .corner-element::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
-        .corner-element::after { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
-        .bottom-corners::before { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
-        .bottom-corners::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
-        
-        .title { font-family: var(--font-primary-sacred); font-weight: 700; letter-spacing: 0.3em; text-align: center; margin-bottom: 50px; font-size: 1.5rem; background: linear-gradient(110deg, #a47c2a, var(--dark-metallic-gold), #a47c2a); background-size: 200% 100%; -webkit-background-clip: text; -moz-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 5s infinite linear; }
-        @keyframes shimmer { from { background-position: 200% center; } to { background-position: 0% center; } }
-        .stagger-reveal > * { opacity: 0; transform: translateY(10px); transition: opacity 1s ease-out, transform 1s ease-out; }
-        
-        /* --- ACT II: THE SANCTUM (Eligibility) --- */
-        .faq-item { margin-bottom: 25px; text-align: left; }
-        .faq-question { font-family: var(--font-primary-sacred); font-weight: 700; margin-bottom: 10px; }
-        .faq-answer { font-weight: 300; line-height: 1.7; color: var(--parchment-beige); opacity: 0.8; }
-        .cta-link { font-family: var(--font-primary-sacred); font-weight: 700; letter-spacing: 0.2em; color: var(--neutral-ritual-grey); border: 1px solid var(--neutral-ritual-grey); padding: 12px 24px; text-decoration: none; display: inline-block; margin-top: 40px; transition: var(--transition-weighty); text-shadow: none; }
-        .cta-link:hover { border-color: var(--dark-metallic-gold); color: var(--dark-metallic-gold); box-shadow: 0 0 15px -5px var(--dark-metallic-gold); }
+        .logo-container img {
+            width: 50px;
+            height: 50px;
+        }
 
-        /* --- ACT III: THE ALTAR (Registration) --- */
-        /* [V8 EVOLUTION] Crystalline Form Fields */
-        .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--neutral-ritual-grey); padding: 10px 0; color: var(--parchment-beige); font-family: var(--font-secondary-body); font-size: 1rem; transition: border-color 0.5s ease, box-shadow 0.5s ease; }
-        .form-input:focus { outline: none; border-bottom: 2px solid var(--dark-metallic-gold); box-shadow: inset 0 0 10px rgba(203, 161, 53, 0.1); }
-        .form-label { position: absolute; top: 10px; left: 0; color: var(--neutral-ritual-grey); font-family: var(--font-primary-sacred); letter-spacing: 0.1em; transition: var(--transition-weighty); pointer-events: none; }
-        .form-input:focus + .form-label, .form-input:not(:placeholder-shown) + .form-label { top: -20px; font-size: 0.8rem; color: var(--dark-metallic-gold); }
-        .form-input::placeholder { color: transparent; }
-        .form-field { position: relative; margin-bottom: 45px; }
-        .submit-button { width: 100%; background-color: transparent; padding: 15px; font-family: var(--font-primary-sacred); font-size: 1.2rem; font-weight: 700; letter-spacing: 0.2em; transition: var(--transition-weighty); margin-top: 20px; }
-        .submit-button:disabled { color: #2a2a2a; border: 1px solid #2a2a2a; pointer-events: none; }
-        .submit-button:not(:disabled) { color: var(--dark-metallic-gold); border: 1px solid var(--dark-metallic-gold); }
-        .submit-button.pulsing-seal { animation-name: pulseSeal; animation-iteration-count: infinite; }
-        .pulsing-seal.stage-1 { animation-duration: 2.5s; }
-        .pulsing-seal.stage-2 { animation-duration: 1.5s; }
-        .pulsing-seal.stage-3 { animation-duration: 0.8s; }
-        @keyframes pulseSeal { 0%, 100% { box-shadow: 0 0 0 0 rgba(203, 161, 53, 0.4); } 50% { box-shadow: 0 0 20px 5px rgba(203, 161, 53, 0.1); } }
-        .submit-button:not(:disabled):hover { background-color: var(--dark-metallic-gold); color: var(--royal-black); box-shadow: 0 0 20px -2px var(--dark-metallic-gold); animation: none; }
-        .warning-text { color: var(--bloodbound-maroon); font-size: 0.8rem; letter-spacing: 0.1em; margin-top: 20px; }
+        .logo-container .platform-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--charcoal-grey);
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav .nav-button {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--charcoal-grey);
+            cursor: pointer;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s, color 0.3s;
+        }
+
+        nav .nav-button:hover,
+        nav .nav-button.active {
+            border-bottom-color: var(--bloodbound-maroon);
+            color: var(--bloodbound-maroon);
+        }
+
+        /* Page Section Visibility */
+        .page-section {
+            display: none; /* Hidden by default */
+        }
+
+        .page-section.visible {
+            display: block; /* Shown via JS */
+        }
         
-        /* --- FINALE --- */
-        #final-symbol { z-index: 20; }
-        #final-symbol .logo-icon { width: 120px; height: 120px; background-image: url("logo.png"); opacity: 0; animation: glowAndFade 5s ease-in-out forwards; }
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes rotateSymbol { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes glowAndFade { 0%, 100% { opacity: 0; transform: scale(0.9); } 50% { opacity: 1; filter: drop-shadow(0 0 30px var(--dark-metallic-gold)); transform: scale(1); } }
+        /* 3. Home (Landing Page / Hero) */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--charcoal-grey);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            color: var(--charcoal-grey);
+            margin-bottom: 2.5rem;
+        }
+        
+        /* General Button Styles */
+        .cta-button, .submit-button {
+            /* MODIFIED: Changed background-color to a linear gradient for a metallic feel */
+            background: linear-gradient(to top, var(--dark-metallic-gold), var(--dark-metallic-gold-light));
+            color: var(--charcoal-grey);
+            border: 2px solid var(--charcoal-grey);
+            padding: 0.8rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .cta-button:hover, .submit-button:hover {
+            /* The hover effect now overrides the gradient, providing clear feedback */
+            background: var(--charcoal-grey);
+            color: var(--dark-metallic-gold);
+        }
+
+        /* 4. Eligibility & Membership Page */
+        .content-section {
+            padding: 1rem 0;
+        }
+
+        .content-section h2 {
+            font-size: 2.5rem;
+            border-bottom: 1px solid var(--bloodbound-maroon);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section p {
+            max-width: 65ch; /* Optimal reading width */
+            margin-bottom: 2rem;
+        }
+        
+        .faq-list {
+            margin-top: 2rem;
+        }
+
+        .faq-list dt {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--bloodbound-maroon);
+            margin-top: 1.5rem;
+        }
+
+        .faq-list dd {
+            margin-left: 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--dark-metallic-gold);
+            margin-top: 0.5rem;
+        }
+        
+        /* 5. Registration Page */
+        .registration-form {
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            font-family: inherit;
+            font-size: 1rem;
+            /* MODIFIED: Set a base color, though the body gradient will show through */
+            background-color: var(--parchment-beige); 
+            border: 1px solid var(--charcoal-grey);
+            color: var(--charcoal-grey);
+            box-sizing: border-box; 
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #585858;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <div class="heartbeat"></div>
-    <canvas id="ether-canvas"></canvas>
-    <div class="cursor cursor-ring"></div>
-    <div class="cursor cursor-dot"></div>
-    <div id="watermark" class="sigil-watermark"></div>
 
-    <div id="unveil" class="page-stage is-active"> <h1 id="unveil-text">Touch the Void</h1> </div>
+    <!-- 2. Header -->
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="secretscenter Logo">
+            <span class="platform-name">secretscenter</span>
+        </div>
+        <nav>
+            <ul>
+                <li><button class="nav-button active" data-page="home">Home</button></li>
+                <li><button class="nav-button" data-page="eligibility">Eligibility & Membership</button></li>
+                <li><button class="nav-button" data-page="registration">Registration</button></li>
+            </ul>
+        </nav>
+    </header>
 
-    <div id="gate" class="page-stage"> <div class="content-wrapper"> <div class="logo-container"> <div id="gate-symbol" class="logo-icon"></div> <h1 class="logo-name">secretscenter</h1> </div> </div> </div>
+    <main class="container">
 
-    <div id="sanctum" class="page-stage"> <div class="content-wrapper"> <div class="obsidian-panel corner-element"> <span class="bottom-corners"></span> <div class="stagger-reveal"> <h2 class="title">PHILOSOPHY</h2> <p style="text-align: left; margin-bottom: 50px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.</p> <div class="faq-item"> <h3 class="faq-question">Lorem ipsum dolor sit amet?</h3> <p class="faq-answer">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel.</p> </div> <div class="faq-item"> <h3 class="faq-question">Curabitur non nulla sit amet nisl tempus?</h3> <p class="faq-answer">Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</p> </div> <a href="#" id="enter-altar-link" class="cta-link">PRESENT INVITATION</a> </div> </div> </div> </div>
+        <!-- 3. Home (Landing Page / Hero) -->
+        <section id="home" class="page-section visible">
+            <div class="hero">
+                <h1>Threshold of the Hidden Order</h1>
+                <p class="tagline">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>
+                <button class="cta-button" id="request-invitation-btn">Request Invitation</button>
+            </div>
+        </section>
 
-    <div id="altar" class="page-stage"> <div class="content-wrapper"> <div class="obsidian-panel corner-element"> <span class="bottom-corners"></span> <form id="ascension-form"> <div class="stagger-reveal"> <h2 class="title">INITIATION</h2> <div class="form-field"> <input type="password" id="name" class="form-input" placeholder="Name" required> <label for="name" class="form-label">Designated Name</label> </div> <div class="form-field"> <input type="password" id="invitation_code" class="form-input" placeholder="Cipher" required> <label for="invitation_code" class="form-label">Invitation Cipher</label> </div> <div class="form-field"> <input type="password" id="secretum" class="form-input" placeholder="Secretum" required> <label for="secretum" class="form-label">Secretum</label> </div> <button type="submit" id="ascend-button" class="submit-button" disabled>ASCEND</button> <p class="warning-text">Submissions are final and irrevocable.</p> </div> </form> </div> </div> </div>
-    
-    <div id="final-symbol" class="page-stage"> <div class="logo-icon"></div> </div>
-    
-    <audio id="sound-gate" preload="auto"><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA" type="audio/wav"></audio>
-    <audio id="sound-tick" preload="auto"><source src="data:audio/wav;base64,UklGRkoAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhRgAAAADAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAAC4AAAAAADAAAAA=" type="audio/wav"></audio>
-    <audio id="sound-ascend" preload="auto"><source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAAAAAA==" type="audio/wav"></audio>
+        <!-- 4. Eligibility & Membership Page -->
+        <section id="eligibility" class="page-section">
+            <div class="content-section">
+                <h2>Our Philosophy</h2>
+                <p>Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
+                
+                <h2>Frequently Asked Questions</h2>
+                <dl class="faq-list">
+                    <dt>What is the First Prerequisite?</dt>
+                    <dd>The first prerequisite is the understanding that some questions do not have answers, only further questions.</dd>
+                    
+                    <dt>How is Membership Determined?</dt>
+                    <dd>Like finds like. A resonance, a shared frequency. Those who belong will find their way here, and those who do not, will not.</dd>
+                    
+                    <dt>Is There a Cost?</dt>
+                    <dd>The currency we trade in is not minted from metal, but from conviction and sacrifice. The cost is what you are willing to give.</dd>
+                </dl>
+            </div>
+        </section>
+
+        <!-- 5. Registration Page -->
+        <section id="registration" class="page-section">
+            <div class="content-section">
+                <h2>Registration</h2>
+                <form class="registration-form" id="entry-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your chosen designation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Your most secure point of contact" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">Reason for Entry</label>
+                        <textarea id="reason" name="reason" placeholder="Articulate the nature of your inquiry..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">Submit</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- Element Cache & State ---
-        const canvas = document.getElementById('ether-canvas'), ctx = canvas.getContext('2d');
-        const cursorRing = document.querySelector('.cursor-ring'), cursorDot = document.querySelector('.cursor-dot');
-        const stages = { unveil: document.getElementById('unveil'), gate: document.getElementById('gate'), sanctum: document.getElementById('sanctum'), altar: document.getElementById('altar'), final: document.getElementById('final-symbol') };
-        const sounds = { gate: document.getElementById('sound-gate'), tick: document.getElementById('sound-tick'), ascend: document.getElementById('sound-ascend') };
-        const watermark = document.getElementById('watermark');
-        let particles = [], audioUnlocked = false;
-        
-        // --- Cursors & Sentient Nebula ---
-        let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 }, ringPos = { x: 0, y: 0 }, dotPos = { x: 0, y: 0 };
-        const ringSpeed = 0.15, dotSpeed = 0.3;
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas); resizeCanvas();
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        class Particle {
-            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 1.5 + 0.5; this.speedX = (Math.random() * 0.2) - 0.1; this.speedY = (Math.random() * 0.2) - 0.1; }
-            update() { let dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx*dx + dy*dy); if (dist < 150) { this.x += dx/dist * 0.5; this.y += dy/dist * 0.5; } this.x += this.speedX; this.y += this.speedY; if (this.x < 0 || this.x > canvas.width) this.speedX *= -1; if (this.y < 0 || this.y > canvas.height) this.speedY *= -1; }
-            draw() { ctx.fillStyle = 'rgba(216, 199, 163, 0.4)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
-        }
-        for (let i = 0; i < 70; i++) particles.push(new Particle());
-        function animate() {
-            dotPos.x += (mouse.x - dotPos.x) * dotSpeed; dotPos.y += (mouse.y - dotPos.y) * dotSpeed; ringPos.x += (mouse.x - ringPos.x) * ringSpeed; ringPos.y += (mouse.y - ringPos.y) * ringSpeed;
-            cursorDot.style.transform = `translate(${dotPos.x-4}px, ${dotPos.y-4}px)`; cursorRing.style.transform = `translate(${ringPos.x-17}px, ${ringPos.y-17}px)`;
-            ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate);
-        }
-        animate();
-        
-        // --- Core Logic & Ritual Progression ---
-        function playSound(sound) { if (audioUnlocked) { sound.currentTime = 0; sound.play().catch(e=>{}); } }
-        function transitionTo(stageKey) {
-            Object.values(stages).forEach(s => s.classList.remove('is-active'));
-            stages[stageKey].classList.add('is-active');
-            watermark.style.opacity = (stageKey === 'gate' || stageKey === 'unveil') ? '0' : '0.1';
-            const targetStage = stages[stageKey];
-            const itemsToReveal = targetStage.querySelectorAll('.stagger-reveal > *');
-            itemsToReveal.forEach((item, index) => { setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'translateY(0)'; }, 300 + index * 150); });
-        }
-        function setupHoverListeners() {
-             const interactive = 'a, button, input, #gate-symbol, #unveil-text';
-             document.querySelectorAll(interactive).forEach(el => {
-                el.addEventListener('mouseenter', () => { document.body.classList.add('link-hover'); playSound(sounds.tick); });
-                el.addEventListener('mouseleave', () => document.body.classList.remove('link-hover'));
-            });
-        }
+        // All JS must be inlined
+        document.addEventListener('DOMContentLoaded', function () {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const pages = document.querySelectorAll('.page-section');
+            const homePage = document.getElementById('home');
+            const eligibilityPage = document.getElementById('eligibility');
+            const registrationPage = document.getElementById('registration');
+            const requestInvitationBtn = document.getElementById('request-invitation-btn');
+            const registrationForm = document.getElementById('entry-form');
 
-        // --- Event Listeners ---
-        document.getElementById('unveil').addEventListener('click', () => {
-            if (audioUnlocked) return;
-            audioUnlocked = true;
-            Object.values(sounds).forEach(s => { s.volume = 0.5; s.play().then(() => s.pause()).catch(e => {}); });
-            document.getElementById('ether-canvas').classList.add('is-active');
-            playSound(sounds.gate);
-            transitionTo('gate');
-        }, { once: true });
-
-        document.getElementById('gate-symbol').addEventListener('click', () => { playSound(sounds.gate); transitionTo('sanctum'); });
-        document.getElementById('enter-altar-link').addEventListener('click', e => { e.preventDefault(); playSound(sounds.gate); transitionTo('altar'); });
-        
-        // --- Form & Ascension Logic (FIXED) ---
-        const ascendButton = document.getElementById('ascend-button');
-        const requiredInputs = [document.getElementById('name'), document.getElementById('invitation_code'), document.getElementById('secretum')];
-        
-        function checkFormCompletion() {
-            let filledCount = 0;
-            requiredInputs.forEach(input => {
-                if (input.value.trim().length > 0) {
-                    filledCount++;
+            // Function to switch pages
+            function showPage(pageId) {
+                // Hide all pages
+                pages.forEach(page => {
+                    page.classList.remove('visible');
+                });
+                
+                // Show the target page
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('visible');
                 }
+                
+                // Update active button state
+                navButtons.forEach(button => {
+                    if (button.dataset.page === pageId) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            }
+
+            // Add click event listeners to navigation buttons
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pageId = this.dataset.page;
+                    showPage(pageId);
+                });
             });
 
-            const allFilled = filledCount === requiredInputs.length;
-            ascendButton.disabled = !allFilled;
-
-            ascendButton.classList.remove('pulsing-seal', 'stage-1', 'stage-2', 'stage-3');
-            if (filledCount > 0) {
-                ascendButton.classList.add('pulsing-seal', `stage-${filledCount}`);
+            // "Request Invitation" button on hero should go to the registration page
+            if (requestInvitationBtn) {
+                requestInvitationBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showPage('registration');
+                });
             }
-        }
-        requiredInputs.forEach(input => input.addEventListener('input', checkFormCompletion));
 
-        document.getElementById('ascension-form').addEventListener('submit', e => {
-            e.preventDefault(); if (ascendButton.disabled) return;
-            playSound(sounds.ascend);
-            document.querySelector('#altar .obsidian-panel').classList.add('is-dissolving');
-            watermark.style.opacity = '0';
-            setTimeout(() => { transitionTo('final'); }, 1200); // Wait for dissolve animation
+            // Handle registration form submission
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent actual form submission
+                    alert('Submitted!');
+                    // Optionally, you could clear the form here
+                    // registrationForm.reset();
+                });
+            }
+
+            // Ensure the home page is visible on initial load
+            homePage.classList.add('visible');
         });
-        
-        setupHoverListeners();
-    });
     </script>
 </body>
 </html>
