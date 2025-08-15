@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get insider secrets from a 30-year government approvals officer. Download our free guide on the top 3 costly contracting mistakes and win more bids.">
+    <title>MAC Government Contracting | Insider's Guide to Winning Bids</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --navy: #002147;
+            --gold: #B8860B;
+            --gold-dark: #a0740a;
+            --light-blue: #eef6ff;
+            --light-gray: #f3f4f6;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #374151;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .section-padding { padding: 5rem 1.5rem; }
+        .bg-navy { background-color: var(--navy); }
+        .bg-gold { background-color: var(--gold); }
+        .text-navy { color: var(--navy); }
+        .text-gold { color: var(--gold); }
+        .border-gold { border-color: var(--gold); }
+        .hover\:bg-gold-dark:hover { background-color: var(--gold-dark); }
+        .hero {
+            background-color: var(--navy);
+            background-image: linear-gradient(rgba(0, 33, 71, 0.97), rgba(0, 33, 71, 0.97)), url('https://www.transparenttextures.com/patterns/subtle-prism.png');
+        }
+        .hero-form-container {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hero-form-container input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.4);
+        }
+        .mistake-card {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-top: 4px solid var(--navy);
+        }
+        .mistake-card h3 { color: var(--navy); }
+        .insider-tip {
+            background-color: var(--light-blue);
+            border-left: 4px solid var(--gold);
+        }
+        .insider-tip strong { color: var(--navy); }
+        .final-cta { background-color: var(--light-gray); }
+        .mac-shield {
+            display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.25rem;
+            border: 1px solid var(--gold); border-radius: 0.5rem; font-weight: 600; color: white; background-color: rgba(0,0,0,0.2);
+        }
+        .mac-shield svg { width: 24px; height: 24px; margin-right: 0.75rem; fill: var(--gold); }
+        .footer { background-color: var(--navy); color: #9ca3af; }
+
+        #chatbot-prompt {
+            position: fixed; bottom: 30px; right: 90px; background-color: var(--navy); color: white;
+            padding: 8px 16px; border-radius: 16px; font-size: 14px; font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 998; opacity: 0; transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+        }
+        #chatbot-prompt::after {
+            content: ''; position: absolute; bottom: 8px; right: -8px; width: 0; height: 0;
+            border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 8px solid var(--navy);
+        }
+        .chatbot-toggle-button {
+            position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: var(--navy);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25); cursor: pointer; z-index: 999;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .chatbot-toggle-button:hover { background-color: var(--gold); transform: scale(1.1); }
+        .chatbot-toggle-button svg { width: 32px; height: 32px; transition: opacity 0.2s ease, transform 0.2s ease; }
+        .chatbot-toggle-button .icon-close { display: none; transform: rotate(-45deg); }
+        .chatbot-container.is-open + .chatbot-toggle-button .icon-open { transform: rotate(45deg); opacity: 0; }
+        .chatbot-container.is-open + .chatbot-toggle-button .icon-close { display: block; transform: rotate(0deg); }
+        .chatbot-container {
+            position: fixed; bottom: 90px; right: 20px; width: 90%; max-width: 400px; height: 80vh;
+            max-height: 700px; background-color: #ffffff; border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; display: flex; flex-direction: column;
+            z-index: 1000; transform-origin: bottom right; transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0; transform: scale(0.95) translateY(10px); pointer-events: none;
+        }
+        .chatbot-container.is-open { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+        .chat-header { background-color: var(--navy); color: white; padding: 1rem; font-weight: 600; text-align: center; flex-shrink: 0; }
+        .chat-messages { flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: var(--light-gray); display: flex; flex-direction: column; gap: 0.75rem; }
+        .input-area { padding: 1rem; border-top: 1px solid #e5e7eb; flex-shrink: 0; }
+        .message { max-width: 85%; border-radius: 0.75rem; padding: 0.6rem 0.9rem; word-wrap: break-word; }
+        .message.bot { background-color: #ffffff; color: #374151; align-self: flex-start; border: 1px solid #e5e7eb; }
+        .message.user { background-color: var(--navy); color: #ffffff; align-self: flex-end; }
+        .quick-reply-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+        .quick-reply-button { background-color: #e5e7eb; color: #374151; padding: 0.5rem 1rem; border-radius: 999px; cursor: pointer; font-size: 0.875rem; transition: background-color 0.2s ease; border: 1px solid transparent; }
+        .quick-reply-button:hover { background-color: #d1d5db; }
+        .contact-form { padding: 1rem; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #d1d5db; margin-bottom: 0.75rem; }
+        .contact-form button, .input-area button { background-color: var(--gold); color: white; width: 100%; border: none; padding: 0.75rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; }
+        .contact-form button:hover, .input-area button:hover { background-color: var(--gold-dark); }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header class="hero section-padding">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="mac-shield mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <span>MAC Shield of Approval</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4 text-white">FREE GUIDE: Avoid the Top 3 Costly Government Contracting Mistakes That Disqualify Bids</h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-6">From 30 Years Inside the Government Review Process</p>
+            <p class="max-w-3xl mx-auto mb-10 text-gray-200">Are you tired of spending countless hours on government proposals, only to face disqualification? After three decades reviewing contracts, I've seen the same critical errors derail countless bids. This guide reveals the fundamental flaws I observed from the government's side, and how you can avoid them.</p>
+            
+            <div class="hero-form-container p-8 rounded-lg shadow-2xl max-w-2xl mx-auto text-left">
+                <h2 class="text-2xl font-bold text-white mb-2">Claim Your FREE Seat to Our Exclusive Webinar!</h2>
+                <p class="mb-6 text-gray-300">As a thank you, you'll be entered into the Jan 2026 drawing for a FREE seat to my webinar presented by VCG: "Mastering Government Submissions" ($1500 Value | Only 25 Seats Available!).</p>
+                <!-- ACTION REQUIRED: Replace "#" with your Formspree endpoint or other form handling URL -->
+                <form id="lead-capture-form" action="#" method="POST">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="lead-name" name="name" placeholder="Your Name" class="p-3 rounded-md w-full bg-white/95 text-gray-800 border-2 border-transparent" required>
+                        <input type="email" id="lead-email" name="email" placeholder="Your Email" class="p-3 rounded-md w-full bg-white/95 text-gray-800 border-2 border-transparent" required>
+                    </div>
+                    <button type="submit" class="w-full bg-gold hover:bg-gold-dark text-white font-bold py-3 px-4 rounded-md text-lg transition duration-300">Download Guide & Enter Drawing</button>
+                    <p id="form-success-message" class="text-center text-green-400 mt-4 hidden">Thank you! Your guide is on its way.</p>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="section-padding bg-white">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-navy">The Top 3 Costly Government Contracting Mistakes</h2>
+                </div>
+                <div class="space-y-10">
+                    <div class="mistake-card p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-4">Mistake #1: The "Generic Technical Proposal" Trap</h3>
+                        <p class="mb-4 text-gray-600"><strong>What it is:</strong> Submitting a boilerplate technical proposal that fails to directly address the specific language, nuances, and unstated needs of the Request for Proposal (RFP). Government reviewers can spot a generic submission a mile away, signaling a lack of commitment.</p>
+                        <p class="mb-4 text-gray-600"><strong>Why it's costly:</strong> Immediate disqualification or a significantly lower technical score, pushing you out of contention before your price is even considered. Often, one writer handles both technical and pricing, diluting focus.</p>
+                        <div class="insider-tip p-4 rounded-md mt-4">
+                            <p><strong>Insider Tip:</strong> Every RFP is a conversation. Read between the lines. Tailor every single section of your proposal to the agency's explicit and implied requirements. Use their exact terminology. Show you understand their problem better than anyone else.</p>
+                        </div>
+                    </div>
+                    <div class="mistake-card p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-4">Mistake #2: Pricing Precision & Contract Type Misunderstanding</h3>
+                        <p class="mb-4 text-gray-600"><strong>What it is:</strong> Failing to price the solicitation exactly as required, or misunderstanding the implications of the contract type. Many contracts are Firm-Fixed Price (F-F-P), which places all risk on the contractor. Errors include inaccurate cost proposals and not accounting for the full risk of an F-F-P contract.</p>
+                        <p class="mb-4 text-gray-600"><strong>Why it's costly:</strong> Pricing must be exact. Errors lead to immediate rejection for being "non-responsive," or trigger lengthy negotiations that erode your profit margins. Misjudging contract type risk can turn a winning bid into a financial disaster.</p>
+                        <div class="insider-tip p-4 rounded-md mt-4">
+                            <p><strong>Insider Tip:</strong> Treat your cost proposal with the same rigor as your technical solution. Ensure absolute consistency across all financial documents. Understand the risk profile of the contract type before you bid. For F-F-P, assume all risk and price accordingly.</p>
+                        </div>
+                    </div>
+                    <div class="mistake-card p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-4">Mistake #3: Neglecting Compliance & Scope Creep Pitfalls</h3>
+                        <p class="mb-4 text-gray-600"><strong>What it is:</strong> Overlooking critical requirements detailed in the solicitation's compliance matrix, Section L, and Section M. This includes failing to address every single "shall" statement or missing formatting conventions. In Personal Services Contracts, a lack of clear boundaries can lead to "other duties as assigned" scenarios.</p>
+                        <p class="mb-4 text-gray-600"><strong>Why it's costly:</strong> These are often pass/fail criteria. A single missed "shall" or formatting error can lead to your entire proposal being deemed non-compliant and rejected. Unmanaged scope creep can breed contempt and significant financial losses.</p>
+                        <div class="insider-tip p-4 rounded-md mt-4">
+                            <p><strong>Insider Tip:</strong> Create your own detailed compliance checklist from the RFP. Dissect it. Assign team members to verify every single requirement. For personal services, define deliverables and scope precisely to avoid undefined work. The government will check compliance; you must manage scope.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="final-cta section-padding">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-navy mb-4">Want to Dive Deeper?</h2>
+                <p class="text-lg text-gray-600 mb-2">My 30 years inside the government have revealed countless other strategies that can make or break your success. In my live session, I'll reveal:</p>
+                <ul class="text-gray-600 text-left list-disc list-inside inline-block mb-6">
+                    <li>Even more common mistakes and how to fix them.</li>
+                    <li>Specific agency-level insights you won't find anywhere else.</li>
+                    <li>A Q&A session to get your pressing questions answered.</li>
+                </ul>
+                <p class="font-semibold text-lg text-gold">No action needed! Your entry into the free seat give-away is reserved. Keep an eye on your inbox for webinar details and access instructions.</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer py-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="font-semibold text-lg text-white mb-2">contractmac.com</p>
+            <p>&copy; 2025 MAC Government Contracting Consulting. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot UI -->
+    <div class="chatbot-container" id="chatbot-container">
+        <div class="chat-header">MAC's AI Assistant</div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="input-area" id="input-area">
+            <div class="quick-reply-buttons" id="quick-reply-buttons"></div>
+        </div>
+        <div class="contact-form hidden" id="contact-form">
+            <h3 class="text-lg font-semibold text-center text-gray-800">Request a Consultation</h3>
+            <p class="text-sm text-gray-600 text-center mb-4">Please provide your details, and MAC's team will be in touch.</p>
+            <input type="text" id="contact-name" placeholder="Your Name" required>
+            <input type="email" id="contact-email" placeholder="Your Email" required>
+            <textarea id="contact-message" placeholder="Briefly describe your needs..." rows="3"></textarea>
+            <button id="submit-contact">Submit Request</button>
+        </div>
+    </div>
+    <div class="chatbot-toggle-button" id="chatbot-toggle">
+        <svg class="icon-open" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </div>
+    <div id="chatbot-prompt">Have a question?</div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const leadCaptureForm = document.getElementById('lead-capture-form');
+        const successMessage = document.getElementById('form-success-message');
+        leadCaptureForm.addEventListener('submit', function(event) {
+            // This prevents the default form submission for demonstration.
+            // When connected to Formspree, it will handle the submission and redirect.
+            const formAction = leadCaptureForm.getAttribute('action');
+            if (!formAction || formAction === "#") {
+                 event.preventDefault();
+                 leadCaptureForm.style.display = 'none';
+                 successMessage.classList.remove('hidden');
+                 console.log("Form submitted locally. Connect to a service like Formspree to send emails.");
+            }
+        });
+
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotPrompt = document.getElementById('chatbot-prompt');
+        setTimeout(() => {
+            chatbotPrompt.style.opacity = '1';
+            chatbotPrompt.style.transform = 'translateY(0)';
+        }, 1500);
+        chatbotToggle.addEventListener('click', () => {
+            const isOpen = chatbotContainer.classList.toggle('is-open');
+            chatbotPrompt.style.opacity = isOpen ? '0' : '1';
+        });
+
+        const chatMessages = document.getElementById('chat-messages');
+        const quickReplyButtonsContainer = document.getElementById('quick-reply-buttons');
+        const inputArea = document.getElementById('input-area');
+        const contactForm = document.getElementById('contact-form');
+        const submitContactButton = document.getElementById('submit-contact');
+        let conversationState = 'start';
+        let qualificationAnswers = {};
+        const faqs = {
+            "What is SAM.gov?": "SAM.gov is the primary government system for entities to register to do business with the U.S. government.",
+            "What is the FAR?": "The Federal Acquisition Regulation (FAR) is the primary rulebook for use by all executive agencies in their acquisition of supplies and services.",
+            "MAC's Specialities?": "MAC specializes in navigating complex contract types like Firm-Fixed Price (F-F-P), Cost-Reimbursement, and Time & Materials (T&M).",
+            "Help with Proposals?": "MAC provides insider insights on technical proposal writing to help you avoid generic submissions and directly address agency needs.",
+            "Help with Pricing?": "MAC offers expert guidance on precise cost proposals and understanding contract risks to avoid disqualification or reduced profits.",
+        };
+        const qualificationQuestions = [
+            { id: 'goal', question: "To see if a consultation is the right fit, what's your primary goal with government contracting?", options: ["Win my first contract", "Improve proposal success", "Ensure compliance", "Other"] },
+            { id: 'revenue', question: "What is your business's approximate annual revenue?", options: ["Under $1M", "$1M - $5M", "$5M - $25M", "Over $25M"] },
+            { id: 'active', question: "Are you actively bidding on or managing government contracts?", options: ["Yes, actively bidding", "No, just starting out"] }
+        ];
+        let currentQuestionIndex = 0;
+
+        function addMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.textContent = text;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        function showQuickReplies(options) {
+            quickReplyButtonsContainer.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('quick-reply-button');
+                button.textContent = option;
+                button.onclick = () => handleUserInput(option);
+                quickReplyButtonsContainer.appendChild(button);
+            });
+        }
+        function handleUserInput(userText) {
+            addMessage(userText, 'user');
+            quickReplyButtonsContainer.innerHTML = '';
+            setTimeout(() => processBotResponse(userText), 500);
+        }
+        function processBotResponse(userText) {
+            switch (conversationState) {
+                case 'start':
+                    if (userText.toLowerCase().includes("question")) {
+                        conversationState = 'faq_menu';
+                        addMessage("Of course. Here are some common questions:", 'bot');
+                        showQuickReplies(Object.keys(faqs).concat(["Back to start"]));
+                    } else if (userText.toLowerCase().includes("consultation")) {
+                        conversationState = 'qualify';
+                        currentQuestionIndex = 0;
+                        askQualificationQuestion();
+                    }
+                    break;
+                case 'faq_menu':
+                    if (faqs[userText]) {
+                        addMessage(faqs[userText], 'bot');
+                        setTimeout(() => {
+                            addMessage("Can I help with another question?", 'bot');
+                            showQuickReplies(Object.keys(faqs).concat(["Back to start"]));
+                        }, 800);
+                    } else {
+                        startNewConversation(false);
+                    }
+                    break;
+                case 'qualify':
+                    qualificationAnswers[qualificationQuestions[currentQuestionIndex].id] = userText;
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < qualificationQuestions.length) {
+                        askQualificationQuestion();
+                    } else {
+                        evaluateQualification();
+                    }
+                    break;
+            }
+        }
+        function askQualificationQuestion() {
+            addMessage(qualificationQuestions[currentQuestionIndex].question, 'bot');
+            showQuickReplies(qualificationQuestions[currentQuestionIndex].options);
+        }
+        function evaluateQualification() {
+            if (qualificationAnswers.revenue === "Under $1M" && qualificationAnswers.active === "No, just starting out") {
+                addMessage("Based on your answers, our free guide and webinar are the perfect starting point for you. They are packed with value! Please fill out the form on the main page to get access.", 'bot');
+                setTimeout(() => startNewConversation(false), 1200);
+            } else {
+                addMessage("Thank you. Based on your needs, a consultation with MAC could be highly beneficial.", 'bot');
+                setTimeout(() => {
+                    inputArea.classList.add('hidden');
+                    contactForm.classList.remove('hidden');
+                }, 800);
+                conversationState = 'await_contact_details';
+            }
+        }
+        submitContactButton.addEventListener('click', () => {
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            if (!name || !email) { alert('Please provide your name and email.'); return; }
+            console.log("Chatbot Consultation Request:", { name, email, message: document.getElementById('contact-message').value, answers: qualificationAnswers });
+            contactForm.classList.add('hidden');
+            addMessage("Thank you! MAC's team will review your information and be in touch shortly.", 'bot');
+            setTimeout(() => startNewConversation(false), 1200);
+        });
+        function startNewConversation(withGreeting = true) {
+            inputArea.classList.remove('hidden');
+            contactForm.classList.add('hidden');
+            conversationState = 'start';
+            qualificationAnswers = {};
+            if (withGreeting) {
+                addMessage("Hi there! I'm MAC's AI assistant. How can I help you today?", 'bot');
+            } else {
+                addMessage("How else can I help?", 'bot');
+            }
+            showQuickReplies(["I have a question.", "I'm interested in a consultation."]);
+        }
+        setTimeout(() => startNewConversation(), 1000);
+    });
+    </script>
+</body>
+</html>
