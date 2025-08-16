@@ -123,7 +123,7 @@
             <div class="hero-form-container p-8 rounded-lg shadow-2xl max-w-2xl mx-auto text-left">
                 <h2 class="text-2xl font-bold text-white mb-2">Claim Your FREE Seat to Our Exclusive Webinar!</h2>
                 <p class="mb-6 text-gray-300">As a thank you, you'll be entered into the Jan 2026 drawing for a FREE seat to my webinar presented by VCG: "Mastering Government Submissions" ($1500 Value | Only 25 Seats Available!).</p>
-                <!-- ACTION REQUIRED: Replace "#" with your Formspree endpoint or other form handling URL -->
+                
                 <form id="lead-capture-form" action="#" method="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="lead-name" name="name" placeholder="Your Name" class="p-3 rounded-md w-full bg-white/95 text-gray-800 border-2 border-transparent" required>
@@ -137,8 +137,6 @@
     </header>
 
     <main>
-        
-
         <section class="final-cta section-padding">
             <div class="max-w-3xl mx-auto text-center">
                 <h2 class="text-3xl font-bold text-navy mb-4">Want to Dive Deeper?</h2>
@@ -187,14 +185,30 @@
         const leadCaptureForm = document.getElementById('lead-capture-form');
         const successMessage = document.getElementById('form-success-message');
         leadCaptureForm.addEventListener('submit', function(event) {
-            // This prevents the default form submission for demonstration.
-            // When connected to Formspree, it will handle the submission and redirect.
             const formAction = leadCaptureForm.getAttribute('action');
             if (!formAction || formAction === "#") {
                  event.preventDefault();
+                 
+                 // Hide form, show success message
                  leadCaptureForm.style.display = 'none';
                  successMessage.classList.remove('hidden');
-                 console.log("Form submitted locally. Connect to a service like Formspree to send emails.");
+                 
+                 // --- START: PDF Download Logic ---
+                 // Create a temporary anchor element to trigger the download.
+                 const link = document.createElement('a');
+                 // Set the path to your PDF file.
+                 link.href = 'topmistakes.pdf'; 
+                 // Set the download attribute to name the file for the user.
+                 link.download = 'topmistakes.pdf'; 
+                 // Append to the document (required for Firefox).
+                 document.body.appendChild(link); 
+                 // Programmatically click the link to start the download.
+                 link.click(); 
+                 // Clean up by removing the temporary element.
+                 document.body.removeChild(link); 
+                 // --- END: PDF Download Logic ---
+
+                 console.log("Form submitted locally. PDF download initiated.");
             }
         });
 
