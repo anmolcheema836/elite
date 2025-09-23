@@ -225,10 +225,11 @@
           };
 
           // --- URL UPDATED HERE ---
-          fetch("https://script.google.com/macros/s/AKfycbyOd34PZhvjJCYgYTLM0ml0wRLP6oramsAMQ1hqZ3OqSnXTOcNEgM5LxpHKcdv1gsI/exec", {
+          fetch("https://script.google.com/macros/s/AKfycbw2oFwG6GusVeYbHzSyRw2G6ItR_gHasrEH2kb-mcH4rS02exHwROhSTbE_H5Q3aK_C/exec", {
             method: "POST",
             body: JSON.stringify(formData),
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
+            mode:"no-cors"
           })
           .then(res => res.text())
           .then(data => {
