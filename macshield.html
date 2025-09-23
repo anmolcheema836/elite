@@ -184,6 +184,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         const leadCaptureForm = document.getElementById('lead-capture-form');
         const successMessage = document.getElementById('form-success-message');
+        
+        // This is the original logic for the form submission
         leadCaptureForm.addEventListener('submit', function(event) {
             const formAction = leadCaptureForm.getAttribute('action');
             if (!formAction || formAction === "#") {
@@ -212,6 +214,33 @@
             }
         });
 
+        // --- START: NEW GOOGLE SHEET SUBMISSION LOGIC ---
+        // Added an event listener to the same form for Google Sheet integration.
+        leadCaptureForm.addEventListener("submit", function(e){
+          e.preventDefault(); // This is redundant but harmless as the other listener also has it.
+
+          let formData = {
+            name: document.getElementById('lead-name').value,
+            email: document.getElementById('lead-email').value
+          };
+
+          fetch("https://script.google.com/macros/s/AKfycbwBHDOrsKwFcCS8FQfJ5aS2pOwoX5xYT3VkpyipfnQ9r4PMtAvAYvHaW0YvTCBZHu-1/exec", {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: { "Content-Type": "application/json" }
+          })
+          .then(res => res.text())
+          .then(data => {
+            console.log("Lead saved to Google Sheet!");
+            // You can optionally show an alert or another message here.
+            // alert("✅ Lead saved to Google Sheet!"); 
+          })
+          .catch(err => console.error("❌ Error sending to Google Sheet:", err));
+        });
+        // --- END: NEW GOOGLE SHEET SUBMISSION LOGIC ---
+
+
+        // --- Chatbot Logic (unchanged) ---
         const chatbotToggle = document.getElementById('chatbot-toggle');
         const chatbotContainer = document.getElementById('chatbot-container');
         const chatbotPrompt = document.getElementById('chatbot-prompt');
